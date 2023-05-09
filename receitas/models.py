@@ -20,9 +20,12 @@ class Receitas(models.Model):
     criado_em = models.DateTimeField(auto_now_add=True)
     atualizado_em = models.DateTimeField(auto_now=True)
     esta_publicado = models.BooleanField(default=False)
-    receita_imagem = models.ImageField(upload_to='receitas/receitas_imagens/%d/%m/%Y/')
+    receita_imagem = models.ImageField(upload_to='receitas/receitas_imagens/%d/%m/%Y/', 
+                                       blank=True, default=''
+                                       )
     categoria = models.ForeignKey(
-        Categoria, on_delete=models.SET_NULL, null=True
+        Categoria, on_delete=models.SET_NULL, null=True, blank=True,
+        default=None
         )
     autor = models.ForeignKey(
         User, on_delete=models.SET_NULL, null=True

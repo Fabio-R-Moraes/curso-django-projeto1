@@ -1,16 +1,35 @@
-from django.shortcuts import render
-from django.http import HttpResponse
+from django.shortcuts import render, get_list_or_404
 from utils.receitas.fabrica import make_recipe
+from .models import Receitas
 
-#HTTP Request
+
 def home(request):
+    receitas = Receitas.objects.filter(esta_publicado=True).order_by('-id')
     return render(request, 'receitas/pages/home.html', context={
-        'receitas':[make_recipe() for _ in range(10)],
+        'receitas': receitas,
+    })
+    #HTTP Response
+
+def categoria(request, categoria_id):
+    receitas = get_list_or_404(Receitas.objects.filter(
+            categoria__id=categoria_id,
+            esta_publicado=True,
+            ).order_by('-id'))
+
+    return render(request, 'receitas/pages/categoria.html', context={
+        'receitas': receitas,
+        'titulo': f'{receitas[0].categoria.nome} - Categoria | '
     })
     #HTTP Response
 
 def receita(request, id):
+    receita = Receitas.objects.filter(
+            pk=id,
+            esta_publicado=True,
+            ).order_by('-id').first()
+
     return render(request, 'receitas/pages/receita-view.html', context={
-        'receita':make_recipe(),
+        'receita':receita,
         'is_detail_page':True,
     })
+    #HTTP Request
