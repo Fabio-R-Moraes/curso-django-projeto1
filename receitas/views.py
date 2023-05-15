@@ -1,10 +1,14 @@
-from django.shortcuts import render, get_list_or_404
+from django.shortcuts import render, get_list_or_404, get_object_or_404
 from utils.receitas.fabrica import make_recipe
 from .models import Receitas
 
 
 def home(request):
-    receitas = Receitas.objects.filter(esta_publicado=True).order_by('-id')
+    #receitas = Receitas.objects.filter(esta_publicado=True).order_by('-id')
+    receitas = Receitas.objects.filter(
+            esta_publicado=True,
+            ).order_by('-id')
+    
     return render(request, 'receitas/pages/home.html', context={
         'receitas': receitas,
     })
@@ -23,10 +27,12 @@ def categoria(request, categoria_id):
     #HTTP Response
 
 def receita(request, id):
-    receita = Receitas.objects.filter(
-            pk=id,
-            esta_publicado=True,
-            ).order_by('-id').first()
+    #receita = Receitas.objects.filter(
+    #        pk=id,
+    #        esta_publicado=True,
+    #        ).order_by('-id').first()
+    
+    receita = get_object_or_404(Receitas, pk=id, esta_publicado=True)
 
     return render(request, 'receitas/pages/receita-view.html', context={
         'receita':receita,

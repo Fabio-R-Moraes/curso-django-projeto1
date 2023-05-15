@@ -2,8 +2,12 @@
 {% block titulo %}Home | {% endblock %}
 {% block conteudo %}
 <div class="main-content main-content-list container">
-    {% for receita in receitas %}
+    {% for receita in receitas  %}
         {% include 'receitas/partials/recipe.html' %}
+    {% empty %}
+        <div class="center m-y">
+            <h1> Não há receitas para mostrar...</h1>
+        </div>
     {% endfor %}
 </div>
 {% endblock %}
