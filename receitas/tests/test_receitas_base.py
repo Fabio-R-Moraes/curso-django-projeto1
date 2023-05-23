@@ -4,8 +4,6 @@ from receitas.models import Categoria, Receitas, User
 
 class ReceitasTestBase(TestCase):
     def setUp(self) -> None:
-        self.faca_receita()
-
         return super().setUp()
 
     def faca_categoria(self, nome='Jantar'):
@@ -13,11 +11,11 @@ class ReceitasTestBase(TestCase):
 
     def faca_autor(
         self,
-        first_name='Mariana',
-        last_name='Moraes',
-        username='Mariana-Moraes',
+        first_name='Wania',
+        last_name='Puta',
+        username='puta_gorda',
         password='fbrql823',
-        email='marianamoraes@gmail.com',
+        email='chuparola@gmail.com',
     ):
         return User.objects.create_user(
             first_name=first_name,
