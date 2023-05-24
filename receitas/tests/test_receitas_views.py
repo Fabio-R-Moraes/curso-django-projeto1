@@ -1,6 +1,6 @@
 from django.urls import reverse, resolve
 from receitas import views
-from test_receitas_base import Receitas, ReceitasTestBase
+from .test_receitas_base import ReceitasTestBase
 
 
 class ReceitasViewsTest(ReceitasTestBase):
@@ -49,7 +49,7 @@ class ReceitasViewsTest(ReceitasTestBase):
         )
         self.assertIs(view.func, views.categoria)
 
-    def test_receitas_categoria_view_retorna_404_se_nao_encontrar_receita(self):
+    def test_receitas_categoria_view_retorna_404_se_nao_encontrar_receita(self):  # noqa: E501
         response = self.client.get(
             reverse('receitas:categoria', kwargs={'categoria_id': 1000})
         )
