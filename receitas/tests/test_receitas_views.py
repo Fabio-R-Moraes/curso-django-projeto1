@@ -25,8 +25,14 @@ class ReceitasViewsTest(ReceitasTestBase):
             response.content.decode('utf-8')
         )
 
+        # Aplicar para causar uma falha de propósito
+        # self.fail('Para que eu possa terminar de digitá-lo!!!')
+
     def test_receitas_home_template_carrega_receitas(self):
-        self.faca_receita()
+        # Precisa de uma receita para fazer o teste
+        self.faca_receita(autor_data={
+            'first_name': 'Fábio'
+        })
         response = self.client.get(reverse('receitas:home'))
 
         # Verificação por contexto
@@ -38,9 +44,19 @@ class ReceitasViewsTest(ReceitasTestBase):
         response_context_receitas = response.context['receitas']
 
         self.assertIn('Repolho Cremoso', response_content)
-        # self.assertIn('15 minutos', response_content)
+        self.assertIn('Fábio', response_content)
         self.assertIn('2 porções', response_content)
         self.assertEqual(len(response_context_receitas), 1)
+
+    def test_receitas_home_nao_carrega_receitas_nao_publicadas(self):
+        # Precisa de uma receita para fazer o teste
+        self.faca_receita(esta_publicado=False)
+        response = self.client.get(reverse('receitas:home'))
+
+        self.assertIn(
+            '<h1>Não há receitas para mostrar...</h1>',
+            response.content.decode('utf-8')
+        )
 
     # Testes para as CATEGORIAS DE RECEITAS
     def test_receitas_categoria_view_esta_correta(self):
@@ -55,6 +71,26 @@ class ReceitasViewsTest(ReceitasTestBase):
         )
         self.assertEqual(response.status_code, 404)
 
+    def test_receitas_categoria_template_carrega_receitas(self):
+        titulo_necessario = 'Este é um teste de categoria'
+        # Precisa de uma receita para fazer o teste
+        self.faca_receita(titulo=titulo_necessario)
+        response = self.client.get(reverse('receitas:categoria', args=(1,)))
+
+        # Verificação por conteúdo
+        response_content = response.content.decode('utf-8')
+
+        self.assertIn(titulo_necessario, response_content)
+
+    def test_receitas_categoria_nao_carrega_receitas_nao_publicadas(self):
+        # Precisa de uma receita para fazer o teste
+        receita = self.faca_receita(esta_publicado=False)
+        response = self.client.get(
+            reverse('receitas:receita', kwargs={'id': receita.categoria.id})
+        )
+
+        self.assertEqual(response.status_code, 404)
+
     # Testes para os DETALHES DE UMA RECEITA
     def test_receitas_receita_view_esta_correta(self):
         view = resolve(
@@ -66,4 +102,35 @@ class ReceitasViewsTest(ReceitasTestBase):
         response = self.client.get(
             reverse('receitas:receita', kwargs={'id': 1000})
         )
+        self.assertEqual(response.status_code, 404)
+
+    def test_receitas_receita_template_carrega_a_receita_correta(self):
+        titulo_necessario = 'Esta é uma página sobre modo de preparo - Carrega uma única receita'
+        # Precisa de uma receita para fazer o teste
+        self.faca_receita(titulo=titulo_necessario)
+        response = self.client.get(
+            reverse(
+                'receitas:receita',
+                kwargs={
+                    'id': 1
+                }
+            ))
+
+        # Verificação por conteúdo
+        response_content = response.content.decode('utf-8')
+
+        self.assertIn(titulo_necessario, response_content)
+
+    def test_receitas_receita_nao_carrega_receita_nao_publicadas(self):
+        # Precisa de uma receita para fazer o teste
+        receita = self.faca_receita(esta_publicado=False)
+
+        response = self.client.get(
+            reverse(
+                'receitas:receita',
+                kwargs={
+                    'id': receita.id
+                }
+            ))
+
         self.assertEqual(response.status_code, 404)

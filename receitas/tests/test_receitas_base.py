@@ -31,7 +31,7 @@ class ReceitasTestBase(TestCase):
         autor_data=None,
         titulo='Repolho Cremoso',
         descricao='Um delicioso repolho cremoso',
-        slug='repolho-cremmoso',
+        slug='repolho-cremoso',
         tempo_preparo=15,
         unidade_tempo_preparo='Minutos',
         porcoes=2,
