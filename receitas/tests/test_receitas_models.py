@@ -49,3 +49,14 @@ class ReceitaModelTest(ReceitasTestBase):
             receita.esta_publicado,
             msg='O campo esta_publicado deveria ser falso...'
         )
+
+    def test_receita_representacao_da_string(self):
+        necessario = 'Musse de Maracujá'
+        self.receita.titulo = necessario
+        self.receita.full_clean()
+        self.receita.save()
+        self.assertEqual(
+            str(self.receita), necessario,
+            msg=f'A representação da string da receita precisa ser igual ao "{necessario}"'
+                f' mas esté chegando "{str(self.receita)}"...'
+        )
