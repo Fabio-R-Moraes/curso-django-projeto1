@@ -134,3 +134,11 @@ class ReceitasViewsTest(ReceitasTestBase):
             ))
 
         self.assertEqual(response.status_code, 404)
+
+    def test_receitas_pesquisa_usando_a_view_correta(self):
+        resolved = resolve(reverse('receitas:pesquisa'))
+        self.assertIs(resolved.func, views.pesquisa)
+
+    def test_receitas_pesquisa_carregue_o_template_correto(self):
+        response = self.client.get(reverse('receitas:pesquisa'))
+        self.assertTemplateUsed(response, 'receitas/pages/pesquisa.html')

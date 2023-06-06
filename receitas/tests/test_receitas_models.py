@@ -12,14 +12,14 @@ class ReceitaModelTest(ReceitasTestBase):
         receita = Receitas(
             categoria=self.faca_categoria(nome='Almoço de Domingo'),
             autor=self.faca_autor(username='Bundinha Deliciosa'),
-            titulo='Repolho Cremoso',
-            descricao='Um delicioso repolho cremoso',
-            slug='repolho-cremoso',
+            titulo='Cuzinho cremoso',
+            descricao='Um delicioso cuzinho cremoso',
+            slug='cuzinho-cremoso',
             tempo_preparo=15,
             unidade_tempo_preparo='Minutos',
             porcoes=2,
             unidade_porcoes='porções',
-            modo_preparo='Modo de preparo do repolho cremoso',
+            modo_preparo='Jorrando porra no cuzinho...',
         )
         receita.full_clean()
         receita.save()
