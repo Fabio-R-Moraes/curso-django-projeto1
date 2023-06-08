@@ -1,5 +1,5 @@
 from django.shortcuts import render, get_list_or_404, get_object_or_404
-from utils.receitas.fabrica import make_recipe
+from django.http import Http404
 from .models import Receitas
 
 
@@ -44,4 +44,11 @@ def receita(request, id):
 
 
 def pesquisa(request):
-    return render(request, 'receitas/pages/pesquisa.html')
+    termo_procurado = request.GET.get('q', '').strip()
+
+    if not termo_procurado:
+        raise Http404()
+
+    return render(request, 'receitas/pages/pesquisa.html', {
+        'page_title': f'Pesquisando por "{termo_procurado}" |',
+    })

@@ -57,6 +57,6 @@ class ReceitaModelTest(ReceitasTestBase):
         self.receita.save()
         self.assertEqual(
             str(self.receita), necessario,
-            msg=f'A representação da string da receita precisa ser igual ao "{necessario}"'
+            msg=f'A representação da string da receita precisa ser igual ao "{necessario}"'  # noqa: E501S
                 f' mas esté chegando "{str(self.receita)}"...'
         )

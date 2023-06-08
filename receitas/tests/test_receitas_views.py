@@ -105,7 +105,7 @@ class ReceitasViewsTest(ReceitasTestBase):
         self.assertEqual(response.status_code, 404)
 
     def test_receitas_receita_template_carrega_a_receita_correta(self):
-        titulo_necessario = 'Esta é uma página sobre modo de preparo - Carrega uma única receita'
+        titulo_necessario = 'Esta é uma página sobre modo de preparo - Carrega uma única receita'  # noqa: E501
         # Precisa de uma receita para fazer o teste
         self.faca_receita(titulo=titulo_necessario)
         response = self.client.get(
@@ -140,5 +140,18 @@ class ReceitasViewsTest(ReceitasTestBase):
         self.assertIs(resolved.func, views.pesquisa)
 
     def test_receitas_pesquisa_carregue_o_template_correto(self):
-        response = self.client.get(reverse('receitas:pesquisa'))
+        response = self.client.get(reverse('receitas:pesquisa') + '?q=teste')
         self.assertTemplateUsed(response, 'receitas/pages/pesquisa.html')
+
+    def test_receitas_procura_sem_termo_levanta_um_404(self):
+        url = reverse('receitas:pesquisa')
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, 404)
+
+    def test_receitas_termo_procurado_esta_no_titulo_da_pagina_e_com_escape(self):
+        url = reverse('receitas:pesquisa') + '?q=<Teste>'
+        response = self.client.get(url)
+        self.assertIn(
+            'Pesquisando por &quot;&lt;Teste&gt;&quot;',
+            response.content.decode('utf-8')
+        )
