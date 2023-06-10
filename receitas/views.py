@@ -1,6 +1,7 @@
 from django.shortcuts import render, get_list_or_404, get_object_or_404
 from django.http import Http404
 from .models import Receitas
+from django.db.models import Q
 
 
 def home(request):
@@ -49,6 +50,15 @@ def pesquisa(request):
     if not termo_procurado:
         raise Http404()
 
+    receitas = Receitas.objects.filter(
+        Q(
+            Q(titulo__icontains=termo_procurado) |
+            Q(descricao__icontains=termo_procurado),
+        ),
+        esta_publicado=True,
+    ).order_by('-titulo')
+
     return render(request, 'receitas/pages/pesquisa.html', {
         'page_title': f'Pesquisando por "{termo_procurado}" |',
+        'receitas': receitas,
     })
