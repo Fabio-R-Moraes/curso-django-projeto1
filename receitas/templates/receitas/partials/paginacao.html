@@ -1,0 +1,20 @@
+{% if receitas.has_other_pages %}
+<div class="container pagination">
+    <div class="paginacao-content">
+        {% if range_paginacao.primeira_pagina_fora_do_range %}
+        <a class="page-link page-item" href="?page=1">1</a>
+        <span class="page-item">...</span>
+        {% endif %}
+
+        {% for pagina in range_paginacao.paginacao %}
+        <a class="page-link page-item" href="?page={{ pagina }}">{{ pagina }}</a>
+        {% endfor %}
+
+        {% if range_paginacao.ultima_pagina_fora_do_range %}
+        <a class="page-link page-item" href="?page={{ range_paginacao.total_paginas }}">{{ range_paginacao.total_paginas
+            }}</a>
+        <span class="page-item">...</span>
+        {% endif %}
+    </div>
+</div>
+{% endif %}

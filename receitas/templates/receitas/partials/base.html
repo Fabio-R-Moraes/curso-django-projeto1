@@ -9,6 +9,7 @@
     {% include 'receitas/partials/search.html' %}
     <main class="main-content-container">
         {% block conteudo %}{% endblock %}
+        {% include 'receitas/partials/paginacao.html' %}
     </main>
     {% include 'receitas/partials/footer.html' %}
 </body>

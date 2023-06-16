@@ -2,6 +2,8 @@ from django.shortcuts import render, get_list_or_404, get_object_or_404
 from django.http import Http404
 from .models import Receitas
 from django.db.models import Q
+from django.core.paginator import Paginator
+from utils.paginacao import make_pagination_range
 
 
 def home(request):
@@ -10,8 +12,22 @@ def home(request):
         esta_publicado=True,
     ).order_by('-id')
 
+    try:
+        pagina_atual = int(request.GET.get('page', 1))
+    except ValueError:
+        pagina_atual = 1
+
+    paginador = Paginator(receitas, 6)
+    pagina_objeto = paginador.get_page(pagina_atual)
+    range_paginacao = make_pagination_range(
+        paginador.page_range,
+        4,
+        pagina_atual,
+    )
+
     return render(request, 'receitas/pages/home.html', context={
-        'receitas': receitas,
+        'receitas': pagina_objeto,
+        'range_paginacao': range_paginacao,
     })
     # HTTP Response
 
