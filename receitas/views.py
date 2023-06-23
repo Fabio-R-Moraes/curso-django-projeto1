@@ -2,8 +2,10 @@ from django.shortcuts import render, get_list_or_404, get_object_or_404
 from django.http import Http404
 from .models import Receitas
 from django.db.models import Q
-from django.core.paginator import Paginator
-from utils.paginacao import make_pagination_range
+from utils.paginacao import make_pagination
+import os
+
+POR_PAGINA = int(os.environ.get('RECEITAS_POR_PAGINA', 6))
 
 
 def home(request):
@@ -12,18 +14,8 @@ def home(request):
         esta_publicado=True,
     ).order_by('-id')
 
-    try:
-        pagina_atual = int(request.GET.get('page', 1))
-    except ValueError:
-        pagina_atual = 1
-
-    paginador = Paginator(receitas, 6)
-    pagina_objeto = paginador.get_page(pagina_atual)
-    range_paginacao = make_pagination_range(
-        paginador.page_range,
-        4,
-        pagina_atual,
-    )
+    pagina_objeto, range_paginacao = make_pagination(
+        request, receitas, POR_PAGINA)
 
     return render(request, 'receitas/pages/home.html', context={
         'receitas': pagina_objeto,
@@ -38,8 +30,12 @@ def categoria(request, categoria_id):
         esta_publicado=True,
     ).order_by('-id'))
 
+    pagina_objeto, range_paginacao = make_pagination(
+        request, receitas, POR_PAGINA)
+
     return render(request, 'receitas/pages/categoria.html', context={
-        'receitas': receitas,
+        'receitas': pagina_objeto,
+        'range_paginacao': range_paginacao,
         'titulo': f'{receitas[0].categoria.nome} - Categoria | '
     })
     # HTTP Response
@@ -74,7 +70,12 @@ def pesquisa(request):
         esta_publicado=True,
     ).order_by('-titulo')
 
+    pagina_objeto, range_paginacao = make_pagination(
+        request, receitas, POR_PAGINA)
+
     return render(request, 'receitas/pages/pesquisa.html', {
         'page_title': f'Pesquisando por "{termo_procurado}" |',
-        'receitas': receitas,
+        'receitas': pagina_objeto,
+        'range_paginacao': range_paginacao,
+        'adicional_url_query': f'&q={termo_procurado}',
     })
