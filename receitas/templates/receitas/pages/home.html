@@ -1,6 +1,9 @@
 {% extends 'receitas/partials/base.html' %}
 {% block titulo %}Home | {% endblock %}
 {% block conteudo %}
+
+{% include 'receitas/partials/mensagens.html' %}
+
 <div class="main-content main-content-list container">
     {% for receita in receitas  %}
         {% include 'receitas/partials/recipe.html' %}
